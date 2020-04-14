@@ -28,7 +28,7 @@
             svgInnerHtml += createBar(numbers[i], i + 1);
         }
         contentDiv.innerHTML = `
-            <svg id="chart" width="600" height="300" viewBox="0 0 80 60">
+            <svg id="chart" width="600" height="405" viewBox="0 0 150 20">
                 ${svgInnerHtml}
             </svg><br/>
             Valgt stolpe: <i id="tellWhich">ingen</i>
@@ -38,15 +38,9 @@
             <button id='nyStolpe' onclick="addBar()">Legg til stolpe</button>
             <button id='endreStolpe' onclick="changeBarValue()" disabled>Endre valgt stolpe</button><br />
             <button id='Fjernestolpe' onclick="removeBar()" disabled>Fjerne valgt stolpe</button>
-            <div id="test"></div>
+            <br />
+            Skapt som nr: <i id="createdNr">ingen valgt</i>
             `;
-        }
-
-        function addBar() {
-            document.getElementById('chart').innerHTML += createBar(numbers[addBars], addBars + 1);            
-            document.getElementById('test').innerHTML = 'test: ' + addBars;
-            addBars++;
-            show();
         }        
 
     function createBar(number, barNo) {
@@ -67,7 +61,8 @@
                 nameOfSelectedBar = selectedBar.innerHTML;
                 let selNr = nameOfSelectedBar - 1;
 
-                document.getElementById('tellWhich').innerHTML = posNumber[selNr];
+                document.getElementById('tellWhich').innerHTML = nameOfSelectedBar;
+                document.getElementById('createdNr').innerHTML = posNumber[selNr];
                 document.getElementById('endreStolpe').disabled = false;
                 document.getElementById('Fjernestolpe').disabled = false;
                 document.getElementById('nyStolpe').disabled = true;
@@ -76,6 +71,7 @@
                 selectedBar.style = "stroke:black; stroke-width:0px;";
                 nameOfSelectedBar = '';
                 document.getElementById('tellWhich').innerHTML = 'ingen';
+                document.getElementById('createdNr').innerHTML = 'ingen valgt';
                 document.getElementById('endreStolpe').disabled = true;
                 document.getElementById('Fjernestolpe').disabled = true;
                 document.getElementById('nyStolpe').disabled = false;
@@ -92,7 +88,7 @@
         return colString;
     }
 
-    // controller (ingenting her ennå)
+    // controller
 
         function removeBar() {            
             let positionNr = nameOfSelectedBar - 1;            
