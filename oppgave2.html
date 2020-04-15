@@ -9,77 +9,51 @@
     <div id="content">
     </div>
 
+    <div id="test1"></div>
     <script>
     // hjelpevariable for både view og controller
         var contentDiv = document.getElementById('content');
         
 
     // model
-        let numbers = [7, 3, 1, 5, 8];
-        let posNumber = [1, 2, 3, 4, 5];
-        let addBars = numbers.length;
-        let nameOfSelectedBar = '';        
+        let numbers = [7, 3, 1, 5, 8];        
+        let nameOfSelectedBar = null;
+        
         
     // view
     show();
     function show() {
-        let svgInnerHtml = '';
+        let svgInnerHtml = '';        
         for (let i = 0; i < numbers.length; i++) {
             svgInnerHtml += createBar(numbers[i], i + 1);
-        }
+        }        
+        const disabled = nameOfSelectedBar == null ? 'disabled' : '';
+        const tellWhich = nameOfSelectedBar == null ? 'ingen' : nameOfSelectedBar;
         contentDiv.innerHTML = `
             <svg id="chart" width="600" height="405" viewBox="0 0 150 20">
                 ${svgInnerHtml}
             </svg><br/>
-            Valgt stolpe: <i id="tellWhich">ingen</i>
+            Valgt stolpe: <i>${tellWhich}</i>
             <br />
             Verdi:
             <input id="barValue" type="number" min="1" max="10" />
-            <button id='nyStolpe' onclick="addBar()">Legg til stolpe</button>
-            <button id='endreStolpe' onclick="changeBarValue()" disabled>Endre valgt stolpe</button><br />
-            <button id='Fjernestolpe' onclick="removeBar()" disabled>Fjerne valgt stolpe</button>
-            <br />
-            Skapt som nr: <i id="createdNr">ingen valgt</i>
-            `;
+            <button onclick="addBar()">Legg til stolpe</button>
+            <button onclick="changeBarValue()" ${disabled}>Endre valgt stolpe</button><br />
+            <button onclick="removeBar()" ${disabled}>Fjerne valgt stolpe</button>            
+            `;        
         }        
 
     function createBar(number, barNo) {
         const width = 8;
-        const spacing = 2;       
+        const spacing = 2;
+        const strokewidth = nameOfSelectedBar == barNo ? 1 : 0;
         let x = (barNo - 1) * (width + spacing);
         let height = number * 10;
         let y = 60 - height;
         let color = calcColor(1, 10, barNo);
-        return `<rect onclick="showSelected(this)" width="${width}" height="${height}"
-                            x="${x}" y="${y}" fill="${color}">${barNo}</rect>`;
+        return `<rect onclick="selected(${barNo})" width="${width}" height="${height}"
+                            x="${x}" y="${y}" fill="${color}" style="stroke:black; stroke-width:${strokewidth};">${barNo}</rect>`;
     }
-
-        function showSelected(selectedBar) {            
-
-            if (nameOfSelectedBar == '') {
-                selectedBar.style = "stroke:black; stroke-width:1px;";
-                nameOfSelectedBar = selectedBar.innerHTML;
-                let selNr = nameOfSelectedBar - 1;
-
-                document.getElementById('tellWhich').innerHTML = nameOfSelectedBar;
-                document.getElementById('createdNr').innerHTML = posNumber[selNr];
-                document.getElementById('endreStolpe').disabled = false;
-                document.getElementById('Fjernestolpe').disabled = false;
-                document.getElementById('nyStolpe').disabled = true;
-                
-            } else if (selectedBar.innerHTML == nameOfSelectedBar) {
-                selectedBar.style = "stroke:black; stroke-width:0px;";
-                nameOfSelectedBar = '';
-                document.getElementById('tellWhich').innerHTML = 'ingen';
-                document.getElementById('createdNr').innerHTML = 'ingen valgt';
-                document.getElementById('endreStolpe').disabled = true;
-                document.getElementById('Fjernestolpe').disabled = true;
-                document.getElementById('nyStolpe').disabled = false;
-                
-            }
-
-            
-        }
 
     function calcColor(min, max, val) {
         var minHue = 240, maxHue = 0;
@@ -90,37 +64,40 @@
 
     // controller
 
+        function selected(barNo) {
+
+            if (nameOfSelectedBar == barNo) {
+                nameOfSelectedBar = null;                
+            } else if (nameOfSelectedBar == null) {
+                nameOfSelectedBar = barNo;                
+            }                        
+            show();
+        }
+
         function removeBar() {            
-            let positionNr = nameOfSelectedBar - 1;            
-            numbers.splice(positionNr, 1);
-            posNumber.splice(positionNr, 1);
-            nameOfSelectedBar = '';
+            let index = nameOfSelectedBar - 1;            
+            numbers.splice(index, 1);
+            nameOfSelectedBar = null;
             show();
         }
 
         function addBar() {
             let newBar = document.getElementById('barValue').value;
             let testValue = testInput(newBar);
-            let getLastNr = posNumber.length;
-            if (testValue == true) {
-                getLastNr = getLastNr - 1;
-                let newBarNr = posNumber[getLastNr];
-                newBarNr++;
-            
-                numbers.push(newBar);
-                posNumber.push(newBarNr);
-                nameOfSelectedBar = '';
+
+            if (testValue == true) {               
+                numbers.push(newBar);                
                 show();
             }            
         }
 
         function changeBarValue() {
-            let positionNr = nameOfSelectedBar - 1;
+            let index = nameOfSelectedBar - 1;
             let selValue = document.getElementById('barValue').value;
             let testValue = testInput(selValue);
-            if (testValue == true) {
-                nameOfSelectedBar = '';
-                numbers[positionNr] = selValue;
+
+            if (testValue == true) {                
+                numbers[index] = selValue;
                 show();
             }            
         }
