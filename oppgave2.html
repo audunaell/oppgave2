@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <script src="obli2.js" type="text/javascript"></script>
 </head>
 <body>
     <div id="content">
@@ -65,49 +66,26 @@
     // controller
 
         function selected(barNo) {
-
-            if (nameOfSelectedBar == barNo) {
-                nameOfSelectedBar = null;                
-            } else if (nameOfSelectedBar == null) {
-                nameOfSelectedBar = barNo;                
-            }                        
+            nameOfSelectedBar = showSelectedBar(nameOfSelectedBar, barNo);            
             show();
         }
 
-        function removeBar() {            
-            let index = nameOfSelectedBar - 1;            
-            numbers.splice(index, 1);
+        function removeBar() {
+            numbers = removeSelectedBar(nameOfSelectedBar, numbers);            
             nameOfSelectedBar = null;
             show();
         }
 
         function addBar() {
-            let newBar = document.getElementById('barValue').value;
-            let testValue = testInput(newBar);
-
-            if (testValue == true) {               
-                numbers.push(newBar);                
-                show();
-            }            
+            let newBar = document.getElementById('barValue').value;            
+            numbers = addNewBar(newBar, numbers)
+            show();           
         }
 
-        function changeBarValue() {
-            let index = nameOfSelectedBar - 1;
+        function changeBarValue() {            
             let selValue = document.getElementById('barValue').value;
-            let testValue = testInput(selValue);
-
-            if (testValue == true) {                
-                numbers[index] = selValue;
-                show();
-            }            
-        }
-
-        function testInput(inpValue) {           
-            if (inpValue >= 1 && inpValue <= 10 && isNaN(inpValue) == false) {
-                 return true;
-            } else {
-                alert("Has to be a number from 1-10");                
-            }            
+            numbers = changeSelectedBar(nameOfSelectedBar, numbers, selValue);
+            show();
         }
     </script>
 </body>
