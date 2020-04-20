@@ -16,8 +16,7 @@ function removeBar() {
     show();
 }
 
-function addBar() {
-    //let newBar = document.getElementById('barValue').value;
+function addBar() {    
     let testValue = testInput(newValue);
 
     if (testValue == true) {
@@ -27,8 +26,7 @@ function addBar() {
 }
 
 function changeBarValue() {
-    let index = nameOfSelectedBar - 1;
-    //let selValue = document.getElementById('barValue').value;
+    let index = nameOfSelectedBar - 1;    
     let testValue = testInput(newValue);
 
     if (testValue == true) {
