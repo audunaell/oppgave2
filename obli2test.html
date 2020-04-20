@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.9.2.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="https://code.jquery.com/qunit/qunit-2.9.2.js"></script>
+    <script src="obli2.js"></script>
+
+    <script>
+        // mock-view
+        function show() { }
+
+        // model
+        let numbers;
+        let nameOfSelectedBar;
+        let newValue;
+        let barNo;
+
+        QUnit.test("Velge stabel når ingen er markert", function (assert) {
+            nameOfSelectedBar = null;
+            barNo = 3;
+            const actual = selected(barNo);
+            assert.equal(nameOfSelectedBar, barNo);
+        });
+
+        QUnit.test("Velge valgt stabel", function (assert) {
+            nameOfSelectedBar = 3;
+            barNo = 3;
+            const actual = selected(barNo);
+            assert.equal(nameOfSelectedBar, null);
+        });
+
+        QUnit.test("Velge annen stabel når en er markert", function (assert) {
+            nameOfSelectedBar = 2;
+            let expected = 2;
+            barNo = 3;
+            const actual = selected(barNo);
+            assert.equal(nameOfSelectedBar, expected);
+        });
+        QUnit.test("Slette stolpe", function (assert) {
+            numbers = [2, 6, 3, 5];
+            nameOfSelectedBar = 2;
+            removeBar();
+            let expectedList = [2, 3, 5];
+            assert.equal(numbers[0], expectedList[0]);
+            assert.equal(numbers[1], expectedList[1]);
+            assert.equal(numbers[2], expectedList[2]);
+        });
+        QUnit.test("Endre stolpe", function (assert) {
+            numbers = [2, 6, 3, 5];
+            nameOfSelectedBar = 3;
+            newValue = 9;
+            changeBarValue();
+            let expectedValue = 9;
+            assert.equal(numbers[2], expectedValue);
+        });
+        QUnit.test("Legge til en stolpe", function (assert) {
+            numbers = [2, 6, 3, 5];
+            let testLength = numbers.length;
+            newValue = 8;
+            addBar();
+            let expectedLast = 8;
+            assert.equal(numbers[testLength], expectedLast);
+        });
+    </script>
+</body>
+</html>
